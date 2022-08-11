@@ -56,7 +56,11 @@
                         <hr>
 
                         <!-- Preview image figure-->
-                        <img class="img-fluid rounded" src="{{ post.head_image.url }}" alt="" >
+                         {% if post.head_image %}
+                        <img class="img-fluid rounded" src="{{ post.head_image.url }}" alt="{{ post.title }} head_image" >
+                        {% else %}
+                           <img class ='card-img-top' src="https://picsum.photos/seed/{{post.id}}/600/200" alt="random_image">
+                    {% endif %}
                         <hr>
                         <!-- Post content-->
                         <section class="mb-5">
