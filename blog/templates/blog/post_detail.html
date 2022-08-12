@@ -1,48 +1,11 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="ko">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>{{post.title}}-Blog</title>
+{% extends 'blog/base.html' %}
 
-        <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}"
-          media="screen">
+{% block head_title %}
+    {{ post.title }} - Blog
+{% endblock %}
 
-        <link rel="stylesheet" href="{% static 'blog/css/blog-post.css' %}"
-          media="screen">
-        <script src="https://kit.fontawesome.com/dc7247180d.js" crossorigin="anonymous"></script>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="#!">Start Bootstrap</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About Me</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Blog</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Page content-->
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-lg-8">
-                    <!-- Post content-->
-                    <article>
-                        <!-- Post header-->
-                        <header class="mb-4">
+{% block main_area %}
+     <div id="post-area">
                             <!-- Post title-->
                             <h1 class="mt-4">{{post.title}}</h1>
                             <h6 class="text-muted">{{ post.hook_text}}</h6>
@@ -54,8 +17,8 @@
                             <hr>
                             <!-- Post meta content-->
 
-                        </header>
-                        <p> {{post.created_at}}</p>
+
+                        <p>Posted on {{post.created_at}}</p>
                         <hr>
 
                         <!-- Preview image figure-->
@@ -65,8 +28,11 @@
                            <img class ='card-img-top' src="https://picsum.photos/seed/{{post.id}}/600/200" alt="random_image">
                     {% endif %}
                         <hr>
-                        <!-- Post content-->
-                        <section class="mb-5">
+
+
+
+                        <!-- Post contnt-->
+
                             <p> {{post.content}}</p>
                             {% if post.file_upload %}
                             <a href="{{ post.file_upload.url}}" class="btn btn-secondary" role="button" download >Download:
@@ -83,9 +49,11 @@
                                 {{ post.get_file_name}}
                             </a>
                             {% endif %}
+                           </div>
 
-                        </section>
-                    </article>
+                          <div id="comment_area">
+
+
                     <!-- Comments section-->
                     <section class="mb-5">
                         <div class="card bg-light">
@@ -93,30 +61,7 @@
                                 <!-- Comment form-->
                                 <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
                                 <!-- Comment with nested comments-->
-                                <div class="d-flex mb-4">
-                                    <!-- Parent comment-->
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-                                        <!-- Child comment 1-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                                            </div>
-                                        </div>
-                                        <!-- Child comment 2-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                When you put money directly to a problem, it makes a good headline.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <!-- Single comment-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
@@ -125,10 +70,23 @@
                                         When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
                                     </div>
                                 </div>
+
+                                <div class="d-flex mb-4">
+                                    <!-- Parent comment-->
+                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                    <div class="ms-3">
+                                        <div class="fw-bold">Commenter Name</div>
+                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
+
+
+                                    </div>
+                                </div>
+                                </div>
+                                {% endblock %}
                             </div>
-                        </div>
+
                     </section>
-                </div>
+
                 <!-- Side widgets-->
                 <div class="col-lg-4">
                     <!-- Search widget-->
@@ -182,4 +140,4 @@
         integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
         crossorigin="anonymous"></script>
     </body>
-</html>
+ </html>
