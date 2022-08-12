@@ -69,8 +69,9 @@
     </div>
     <div class='container my-3'>
         <div class="row">
-            <div class="col-md-8 col-lg-9">
+            <div class="col-md-8 col-lg-9" id="main-area">
                 <h1>Blog</h1>
+                {% if post_list.exists %}
 
                 {% for p in post_list %}
                 <!-- Blog post-->
@@ -95,6 +96,9 @@
                     </div>
             </div>
                 {% endfor %}
+                {% else %}
+                 <h3> 아직 게시물이 없습니다.</h3>
+                {% endif %}
             <div class="col-md-4 col-lg-3">
                 <!-- Search widget-->
                 <div class="card mb-4">
@@ -160,6 +164,6 @@
         integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
         crossorigin="anonymous"></script>
 
-</body>
+ </body>
 
 </html>
