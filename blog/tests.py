@@ -72,6 +72,7 @@ class TestView(TestCase):
         post_001 = Post.objects.create(
                 title= '첫 번째 포스트입니다.',
                 content= 'Hello World. We are the world',
+                author=self.user_trump,
             )
 
         self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
@@ -86,6 +87,8 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         post_area = main_area.find('div', id='post-area')
         self.assertIn(post_001.title, post_area.text)
+
+        self.assertIn(self.user_trump.username.upper(), post_area.text)
 
         self.assertIn(post_001.content, post_area.text)
 
