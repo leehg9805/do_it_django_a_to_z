@@ -5,56 +5,6 @@ from .models import Post, Category, Tag
 
 class TestView(TestCase):
 
-    def test_update_post(self):
-        update_post_url = f'/blog/update_post/{self.post_003.pk}/'
-
-        response = self.client.get(update_post_url)
-        self.assertNotEqual(response.status_code, 200)
-
-        self.assertNotEqual(self.post_003.author, self.user_trump)
-        self.client.login(
-            username=self.user_trump.username,
-            password='1q2w3e4r!'
-        )
-        response = self.client.get(update_post_url)
-        self.assertEqual(response.status_code, 403)
-
-        self.client.login(
-            username=self.post_003.author.username,
-            password='1q2w3e4r!'
-        )
-        response = self.client.get(update_post_url)
-        self.assertEqual(response.status_code, 200)
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        self.assertEqual('Edit Post - Blog', soup.title.text)
-        main_area = soup.find('div', id='main-area')
-        self.assertIn('Edit Post', main_area.text)
-
-        tag_str_input = main_area.find('input', id='id_tags_str')
-        self.assertTrue(tag_str_input)
-        self.assertIn('파이썬 공부; python', tag_str_input.attrs['value'])
-
-        response = self.client.post(
-            update_post_url,
-            {
-                'title': '세 번째 포스트를 수정했습니다.',
-                'content': "안녕 세계? 우리는 하나!",
-                'category': self.category_music.pk,
-                'tags_str': '파이썬 공부; 한글 태그, some tag',
-            },
-            follow=True
-        )
-        soup = BeautifulSoup(response.content, 'html.parser')
-        main_area = soup.find('div', id='main-area')
-        self.assertIn('세 번째 포스트를 수정했습니다.', main_area.text)
-        self.assertIn('안녕 세계? 우리는 하나!', main_area.text)
-        self.assertIn(self.category_music.name, main_area.text)
-
-        self.assertIn('파이썬 공부', main_area.text)
-        self.assertIn('한글 태그', main_area.text)
-        self.assertIn('some tag', main_area.text)
-        self.assertNotIn('python', main_area.text)
     def setUp(self):
         self.client = Client()
         self.user_trump = User.objects.create_user(username='trump',
@@ -165,6 +115,58 @@ class TestView(TestCase):
         self.assertTrue(Tag.objects.get(name='한글 태그'))
         self.assertEqual(Tag.objects.count(), 5)
 
+    def test_update_post(self):
+        update_post_url = f'/blog/update_post/{self.post_003.pk}/'
+
+        response = self.client.get(update_post_url)
+        self.assertNotEqual(response.status_code, 200)
+
+        self.assertNotEqual(self.post_003.author, self.user_trump)
+        self.client.login(
+            username=self.user_trump.username,
+            password='1q2w3e4r!'
+        )
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 403)
+
+        self.client.login(
+            username=self.post_003.author.username,
+            password='1q2w3e4r!'
+        )
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.assertEqual('Edit Post - Blog', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Edit Post', main_area.text)
+
+        tag_str_input = main_area.find('input', id='id_tags_str')
+        self.assertTrue(tag_str_input)
+        print(tag_str_input)
+        self.assertIn('파이썬 공부; python', tag_str_input.attrs['value'])
+
+        response = self.client.post(
+            update_post_url,
+            {
+                'title': '세 번째 포스트를 수정했습니다.',
+                'content': "안녕 세계? 우리는 하나!",
+                'category': self.category_music.pk,
+                'tags_str': '파이썬 공부; 한글 태그, some tag',
+            },
+            follow=True
+        )
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('세 번째 포스트를 수정했습니다.', main_area.text)
+        self.assertIn('안녕 세계? 우리는 하나!', main_area.text)
+        self.assertIn(self.category_music.name, main_area.text)
+
+        self.assertIn('파이썬 공부', main_area.text)
+        self.assertIn('한글 태그', main_area.text)
+        self.assertIn('some tag', main_area.text)
+        self.assertNotIn('python', main_area.text)
+
 
     def navbar_test(self, soup):
         navbar = soup.nav
@@ -273,6 +275,25 @@ class TestView(TestCase):
         self.assertIn(self.tag_hello.name, post_area.text)
         self.assertNotIn(self.tag_python.name, post_area.text)
         self.assertNotIn(self.tag_python_kor.name, post_area.text)
+
+    def test_search(self):
+        post_about_python = Post.objects.create(
+            title='파이썬에 대한 포스트입니다.',
+            content='Hello World. We are the world.',
+            author=self.user_trump
+        )
+
+        response = self.client.get('/blog/search/파이썬/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        main_area = soup.find('div', id='main-area')
+
+        self.assertIn('Search: 파이썬 (2)', main_area.text)
+        self.assertNotIn(self.post_001.title, main_area.text)
+        self.assertNotIn(self.post_002.title, main_area.text)
+        self.assertIn(self.post_003.title, main_area.text)
+        self.assertIn(post_about_python.title, main_area.text)
 
 
 
